@@ -9,7 +9,7 @@ namespace project1
         public static void Main(string[] args)
         {
 
-
+            Console.SetWindowSize(200, 50);
             string PlayerName;
             string PlayerPosition;
             string PlayerSchool;
@@ -126,12 +126,14 @@ namespace project1
 
             };
 
-            Console.WriteLine(NameArray[0, 0]);
+           
         
 
-            //How do you feed data into this array?
+            
 
             Player[,] PlayerArray = new Player[8, 5];
+
+            //loop that creates player objects
             for(int x = 0; x < 8; x++)
             {
                 for(int y = 0; y < 5; y++)
@@ -146,16 +148,16 @@ namespace project1
                     
 
 
-                    Console.WriteLine("Made a new player");
-                    Console.Write(Convert.ToString(x)+" ,"+Convert.ToString(y));
-                    Console.WriteLine();
+                    //Console.WriteLine("Made a new player");
+                    //Console.Write(Convert.ToString(x)+" ,"+Convert.ToString(y));
+                    //Console.WriteLine();
                     
-                    Console.WriteLine(PlayerName);
-                    Console.WriteLine(PlayerPosition);
-                    Console.WriteLine(PlayerSchool);
-                    Console.WriteLine("$"+DraftCost);
+                    //Console.WriteLine(PlayerName);
+                    //Console.WriteLine(PlayerPosition);
+                    //Console.WriteLine(PlayerSchool);
+                    //Console.WriteLine("$"+DraftCost);
                     
-                    Console.WriteLine();
+                    //Console.WriteLine();
 
                     
                     
@@ -179,7 +181,7 @@ namespace project1
         
             ConsoleKey exit = ConsoleKey.N;
 
-            ConsoleKey RowSelection;
+            
             ConsoleKey PlayerSelectionNumber;
 
         
@@ -191,10 +193,9 @@ namespace project1
             {
                 
                 start = Console.ReadKey().Key;
-                Console.WriteLine("Please enter the row you would like to draft from: ");
-                RowSelection = Console.ReadKey().Key;
-                Console.WriteLine("Please enter the player number you would like to draft: ");
-                PlayerSelectionNumber = Console.ReadKey().Key;
+                OutputTable(NameArray, PositionArray, SalaryArray, SchoolArray);
+                GetRow(out int row);
+                GetPlayer(out int PlayerNumber);
 
                 
                 
@@ -202,6 +203,37 @@ namespace project1
             }
 
 
+        }
+
+        static int GetRow(out int row)
+        {
+            Console.WriteLine("Please enter the row number you would like to draft from");
+            return row = Convert.ToInt32(Console.ReadLine());
+        }
+
+        static int GetPlayer(out int PlayerNumber)
+        {
+            Console.WriteLine("Please enter the player number you would like to draft");
+            return PlayerNumber = Convert.ToInt32(Console.ReadLine());
+
+        }
+
+
+        static void OutputTable(string [,] name, string[,] position, double [,] salary, string[,] school)
+        {
+            Console.WriteLine($"\t 1 \t\t\t 2 \t\t\t 3 \t\t\t 4 \t\t\t 5");
+            for (var i = 0; i < name.GetLength(0); i++)
+            {
+                Console.Write($"{i+1} \t");
+                for(var x = 0 ; x < name.GetLength(1); x++)
+                {
+                    Console.Write("{0,-20}{1,-20}",name[i,x],position[i,x]);
+                    
+                }
+
+
+                 Console.WriteLine("");
+            }
         }
     }
 }
