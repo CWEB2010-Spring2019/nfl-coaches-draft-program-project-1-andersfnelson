@@ -224,16 +224,22 @@ namespace project1
             Console.WriteLine($"\t 1 \t\t\t 2 \t\t\t 3 \t\t\t 4 \t\t\t 5");
             for (var i = 0; i < name.GetLength(0); i++)
             {
-                Console.Write($"{i+1} \t");
-                for(var x = 0 ; x < name.GetLength(1); x++)
+                Console.Write($"{i + 1} \t");
+                for (var x = 0; x < name.GetLength(1); x++)
                 {
-                    Console.Write("{0,-20}{1,-20}",name[i,x],position[i,x]);
+                    Console.Write("{0,-20}", name[i, x]);
                     
+
                 }
+                Console.WriteLine("\n");
+            }
+            
+            
+               
 
 
                  Console.WriteLine("");
-            }
+            
         }
     }
 }
