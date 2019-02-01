@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace project1
 {
     class Program
     {
         public static void Main(string[] args)
-        { 
+        {
 
 
-
+            string PlayerName;
+            string PlayerPosition;
+            string PlayerSchool;
+            double DraftCost;
             string[,] NameArray = new string[8, 5]
             {
                 {
@@ -22,10 +26,10 @@ namespace project1
                     "D.K. Metcalf","A.J. Brown","N'Keal Harry","Marquise Brown","Kelvin Harmon"
                 },
                 {
-                    "Nick Bosa","","","",""
+                    "Nick Bosa","Quinnen Williams","Ed Oliver","Jeffrey Simmons","Clelin Farrell"
                 },
                 {
-                    "Greedy Williams","","","",""
+                    "Greedy Williams","Deandre Baker","Byron Murphy","Deionte Thompson","Amani Oruwariye"
                 },
                 {
                     "Noah Fant","Irv Smith","T.J. Hockenson","Kaden Smith","Josh Oliver"
@@ -36,6 +40,90 @@ namespace project1
                 {
                     "Jonah Williams","Greg Little","Cody Ford","Jawaan Taylor","Yodny Cajuste"
                 }
+            };
+            string[,] PositionArray = new string[8, 5]
+            {
+                {
+                    "Quarterback","Quarterback","Quarterback","Quarterback","Quarterback"
+                },
+                {
+                    "Running Back","Running Back","Running Back","Running Back","Running Back"
+                },
+                {
+                    "Wide Reciever","Wide Reciever","Wide Reciever","Wide Reciever","Wide Reciever"
+                },
+                {
+                    "Defensive Lineman","Defensive Lineman","Defensive Lineman","Defensive Lineman","Defensive Lineman"
+                },
+                {
+                    "Defensive Back","Defensive Back","Defensive Back","Defensive Back","Defensive Back"
+                },
+                {
+                    "Tight End","Tight End","Tight End","Tight End","Tight End"
+                },
+                {
+                    "Linebacker","Linebacker","Linebacker","Linebacker","Linebacker"
+                },
+                {
+                    "Offensive Tackle","Offensive Tackle","Offensive Tackle","Offensive Tackle","Offensive Tackle"
+                },
+
+            };
+            string[,] SchoolArray = new string[8, 5]
+            {
+                {
+                    "Ohio St.","Oklahoma","Missouri","Duke","West Virginia"
+                },
+                {
+                    "Alabama","Alabama","Iowa St.","Oklahoma St.","FAU"
+                },
+                {
+                    "Ole Miss","Ole Miss","Arizona St.","Oklahoma","NC State"
+                },
+                {
+                    "Ohio St.","Alabama","Houston","Miss. State","Clemson"
+                },
+                {
+                    "LSU","Georgia","Washington","Alabama","Penn State"
+                },
+                {
+                    "Iowa","Alabama","Iowa","Stanford","San Jose St."
+                },
+                {
+                    "Kentucky","LSU","Miss. State","Alabama","Michigan"
+                },
+                {
+                    "Alabama","Ole Miss","Oklahoma","Florida","West Virginia"
+                },
+
+            };
+            double[,] SalaryArray = new double[8, 5]
+            {
+                {
+                    26400100.00,20300100.00,17420300.00,13100145.00,10300000.00
+                },
+                {
+                    24500100.00,19890200.00,18700800.00,15000000.00,11600400.00
+                },
+                {
+                    23400000.00,27900300.00,19300230.00,13400230.00,10000000.00
+                },
+                {
+                    26200300.00,22000000.00,16000000.00,18000000.00,13000000.00
+                },
+                {
+                    24000000.00,22500249.00,20000100.00,16000200.00,11899999.00
+                },
+                {
+                    27800900.00,21000800.00,17499233.00,27900200.00,14900333.00
+                },
+                {
+                    22900300.00,19000590.00,18000222.00,12999999.00,10000100.00
+                },
+                {
+                    23000000.00,20000000.00,19400000.00,16200700.00,15900000.00
+                },
+
             };
 
             Console.WriteLine(NameArray[0, 0]);
@@ -48,12 +136,27 @@ namespace project1
             {
                 for(int y = 0; y < 5; y++)
                 {
-                   PlayerArray[x, y] = new Player();
-                   
-                   
+
+                    PlayerName = NameArray[x, y];
+                    PlayerPosition = PositionArray[x, y];
+                    PlayerSchool = SchoolArray[x, y];
+                    DraftCost = SalaryArray[x, y];
+
+                    PlayerArray[x, y] = new Player(){ PlayerName = PlayerName, PlayerPosition = PlayerPosition, PlayerSchool = PlayerSchool, DraftCost = DraftCost };
+                    
+
+
                     Console.WriteLine("Made a new player");
-                    Console.WriteLine(x);
-                    Console.WriteLine(y);
+                    Console.Write(Convert.ToString(x)+" ,"+Convert.ToString(y));
+                    Console.WriteLine();
+                    
+                    Console.WriteLine(PlayerName);
+                    Console.WriteLine(PlayerPosition);
+                    Console.WriteLine(PlayerSchool);
+                    Console.WriteLine("$"+DraftCost);
+                    
+                    Console.WriteLine();
+
                     
                     
                     
@@ -61,9 +164,9 @@ namespace project1
                 
             }
 
-            Player DwayneHaskins = new Player();
-            DwayneHaskins.PlayerName = "Dwayne Haskins";
-            Console.WriteLine(DwayneHaskins.PlayerName);
+
+            
+            
 
             
             double PriceAccum = 0;
@@ -73,15 +176,27 @@ namespace project1
             //Should this be a list of strings or ints
             List<string> selections = new List<string>();
             ConsoleKey start;
+        
             ConsoleKey exit = ConsoleKey.N;
+
+            ConsoleKey RowSelection;
+            ConsoleKey PlayerSelectionNumber;
 
         
             Console.WriteLine("Welcome to the NFL Draft.  Would you like to begin? (Y/N)");
             start = Console.ReadKey().Key;
+            
+
             while(start != exit)
             {
                 
                 start = Console.ReadKey().Key;
+                Console.WriteLine("Please enter the row you would like to draft from: ");
+                RowSelection = Console.ReadKey().Key;
+                Console.WriteLine("Please enter the player number you would like to draft: ");
+                PlayerSelectionNumber = Console.ReadKey().Key;
+
+                
                 
                 
             }
