@@ -13,5 +13,7 @@ namespace project1
 
         //How to ensure that this is between 1 and 5?  Is this important?
         public int DraftChoice { get; set; }
+
+        public bool PickedPlayer = false;
     }
 }

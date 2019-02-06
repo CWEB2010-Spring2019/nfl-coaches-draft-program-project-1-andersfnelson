@@ -125,7 +125,8 @@ namespace project1
                 },
 
             };
-
+            bool[,] PickedPlayer = new bool[8, 5];
+            
            
         
 
@@ -143,6 +144,7 @@ namespace project1
                     PlayerPosition = PositionArray[x, y];
                     PlayerSchool = SchoolArray[x, y];
                     DraftCost = SalaryArray[x, y];
+                    
 
                     PlayerArray[x, y] = new Player(){ PlayerName = PlayerName, PlayerPosition = PlayerPosition, PlayerSchool = PlayerSchool, DraftCost = DraftCost };
                     
@@ -174,64 +176,157 @@ namespace project1
             double PriceAccum = 0;
             const double PriceLimit = 95000000;
             const double AffordablePrice = 65000000;
-
-            //Should this be a list of strings or ints
-            List<string> selections = new List<string>();
-            ConsoleKey start;
-        
-            ConsoleKey exit = ConsoleKey.N;
+            int PickCounter = 0;
+            bool costEffective = false;
 
             
-            ConsoleKey PlayerSelectionNumber;
+            List<int> RankSelections = new List<int>();
+           
+        
+            
+
+            
+            
 
         
             Console.WriteLine("Welcome to the NFL Draft.  Would you like to begin? (Y/N)");
-            start = Console.ReadKey().Key;
+            KeyCapture(out ConsoleKey start, PickCounter, ref RankSelections, PriceAccum, ref costEffective);
             
 
-            while(start != exit)
+            while(start != ConsoleKey.N)
             {
                 
-                start = Console.ReadKey().Key;
                 OutputTable(NameArray, PositionArray, SalaryArray, SchoolArray);
-                GetRow(out int row);
-                GetPlayer(out int PlayerNumber);
 
+
+                Player SelectedPlayer = SelectPlayer(PlayerArray, ref RankSelections);
+
+                if (SelectedPlayer.PickedPlayer == false)
+                {
+                    if (SelectedPlayer.DraftCost + PriceAccum > PriceLimit)
+                    {
+                        Console.WriteLine("Sorry, you don't have money in your budget for this player!");
+                    }
+                    else
+                    {
+                        
+                        PriceAccum = PriceAccum + SelectedPlayer.DraftCost;
+                        SelectedPlayer.PickedPlayer = true;
+                        Console.Clear();
+                        Console.WriteLine("You have drafted " + SelectedPlayer.PlayerName);
+                        Console.WriteLine("You have {0} left in your budget", (PriceLimit - PriceAccum).ToString("c"));
+                        PickCounter++;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Sorry, you already selected that player.");
+                }
+
+
+
+
+                KeyCapture(out start, PickCounter, ref RankSelections, PriceAccum, ref costEffective);
+                Console.Clear();
                 
                 
                 
             }
-
-
+            EndTable(PlayerArray, ref costEffective);
+ 
         }
 
-        static int GetRow(out int row)
+
+        //Do this for column
+        static int GetRow(Player [,] PlayerArray)
         {
-            Console.WriteLine("Please enter the row number you would like to draft from");
+            int row;
+            Console.WriteLine("Please enter the row number you would like to draft from.\n ");
+            for(int i = 0; i < PlayerArray.GetLength(0); i++)
+            {
+                Console.WriteLine($"{i + 1}) {PlayerArray[i,0].PlayerPosition}");
+            }
+            try
+            {
+                return row = Convert.ToInt32(Console.ReadLine());
+            }
+            catch
+            {
+                row = -1;
+            }
+            while ((row < 0) || (row > 7))
+            {
+                try
+                {
+                    Console.WriteLine("You entered an incorrect value.  Please enter a number between 1 and 8.");
+                    return row = Convert.ToInt32(Console.ReadLine());
+
+                }
+                catch
+                {
+                    row = -1;
+                }
+            }
+
             return row = Convert.ToInt32(Console.ReadLine());
         }
 
-        static int GetPlayer(out int PlayerNumber)
+        static int GetColumn(ref List<int>RankSelections)
         {
+            int PlayerNumber;
             Console.WriteLine("Please enter the player number you would like to draft");
-            return PlayerNumber = Convert.ToInt32(Console.ReadLine());
+            PlayerNumber = Convert.ToInt32(Console.ReadLine());
+            RankSelections.Add(PlayerNumber);
+            return PlayerNumber;
+
+
 
         }
 
 
         static void OutputTable(string [,] name, string[,] position, double [,] salary, string[,] school)
         {
-            Console.WriteLine($"\t 1 \t\t\t 2 \t\t\t 3 \t\t\t 4 \t\t\t 5");
+            Console.Clear();
+            Console.Write("Position".PadRight(20));
+            for (var x = 0; x < name.GetLength(1); x++)
+            {
+                Console.Write($"{x+1}".PadRight(20));
+            }
+            Console.WriteLine("\n");
+
             for (var i = 0; i < name.GetLength(0); i++)
             {
-                Console.Write($"{i + 1} \t");
+                var y = 0;
+                Console.Write($"{position[i,y]}".PadRight(20));
+
                 for (var x = 0; x < name.GetLength(1); x++)
                 {
-                    Console.Write("{0,-20}", name[i, x]);
                     
-
+                    Console.Write("{0,-20}", name[i, x].PadRight(20));
+                        
+      
                 }
-                Console.WriteLine("\n");
+                Console.WriteLine();
+                Console.Write("".PadRight(20));
+                for(var x = 0; x <salary.GetLength(1); x++)
+                {
+                    Console.Write("{0,-20}", salary[i, x].ToString("c").PadRight(20));
+                }
+
+                Console.WriteLine();
+                Console.Write("".PadRight(20));
+                for(var x = 0; x < school.GetLength(1); x++)
+
+                {
+                    Console.Write("{0,-20}", school[i, x].PadRight(20));
+                }
+                Console.WriteLine();
+
+            
+
+
+                Console.WriteLine("");
+                
             }
             
             
@@ -241,6 +336,70 @@ namespace project1
                  Console.WriteLine("");
             
         }
+
+        static Player SelectPlayer(Player[,] PlayerArray,ref List<int>RankSelections)
+        {
+            return PlayerArray[GetRow(PlayerArray)-1, GetColumn(ref RankSelections)-1];
+        }
+
+        static void KeyCapture(out ConsoleKey start, int PickCount, ref List<int>RankSelections, double PriceAccum, ref bool costEffective)
+        {
+            
+            Console.WriteLine("Press any key to continue drafting or press n to escape");
+            start = Console.ReadKey().Key;
+            if(PickCount == 3)
+            {
+                //Puts list in numerical order
+                RankSelections.Sort();
+                RankSelections.Reverse();
+                for (int x = 0; x < RankSelections.Count; x++)
+                {
+                    if (RankSelections[x] > 3)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if(PriceAccum < 65000000)
+                        {
+                            costEffective = true;
+                        }
+                    }
+                }
+            }
+            else if(PickCount == 5)
+            {
+                Console.WriteLine("You are out of picks, press any key to exit.");
+                Console.ReadKey();
+                start = ConsoleKey.N;
+
+            }
+          
+            
+        }
+
+        static void EndTable(Player[,] PlayerArray, ref bool costEffective)
+        {
+            Console.WriteLine("You have drafted: ");
+            for (var x = 0; x < PlayerArray.GetLength(0); x++)
+            {
+                for (var y = 0; y < PlayerArray.GetLength(1); y++)
+                {
+                    if (PlayerArray[x, y].PickedPlayer == true)
+                    {
+                        Console.WriteLine($"{PlayerArray[x,y].PlayerName}");
+                    }
+                }
+            }
+            if(costEffective == true)
+            {
+                Console.WriteLine("You have had a cost effective draft!");
+            }
+            Console.WriteLine("Press any key to exit");
+            Console.ReadKey();
+            
+        }
+        
     }
 }
  
