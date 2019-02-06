@@ -190,7 +190,7 @@ namespace project1
 
         
             Console.WriteLine("Welcome to the NFL Draft.  Would you like to begin? (Y/N)");
-            KeyCapture(out ConsoleKey start, PickCounter, ref RankSelections, PriceAccum, ref costEffective);
+            KeyCapture(out ConsoleKey start, PickCounter, ref RankSelections, PriceAccum, ref costEffective, AffordablePrice);
             
 
             while(start != ConsoleKey.N)
@@ -226,7 +226,7 @@ namespace project1
 
 
 
-                KeyCapture(out start, PickCounter, ref RankSelections, PriceAccum, ref costEffective);
+                KeyCapture(out start, PickCounter, ref RankSelections, PriceAccum, ref costEffective, AffordablePrice);
                 Console.Clear();
                 
                 
@@ -342,7 +342,7 @@ namespace project1
             return PlayerArray[GetRow(PlayerArray)-1, GetColumn(ref RankSelections)-1];
         }
 
-        static void KeyCapture(out ConsoleKey start, int PickCount, ref List<int>RankSelections, double PriceAccum, ref bool costEffective)
+        static void KeyCapture(out ConsoleKey start, int PickCount, ref List<int>RankSelections, double PriceAccum, ref bool costEffective, double AffordablePrice)
         {
             
             Console.WriteLine("Press any key to continue drafting or press n to escape");
@@ -360,7 +360,7 @@ namespace project1
                     }
                     else
                     {
-                        if(PriceAccum < 65000000)
+                        if(PriceAccum < AffordablePrice)
                         {
                             costEffective = true;
                         }
