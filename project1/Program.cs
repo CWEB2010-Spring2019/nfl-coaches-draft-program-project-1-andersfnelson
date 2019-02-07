@@ -9,6 +9,8 @@ namespace project1
         public static void Main(string[] args)
         {
 
+            
+
             Console.SetWindowSize(200, 50);
             string PlayerName;
             string PlayerPosition;
@@ -131,7 +133,7 @@ namespace project1
         
 
             
-
+            //Setting up array to hold player objects
             Player[,] PlayerArray = new Player[8, 5];
 
             //loop that creates player objects
@@ -179,7 +181,7 @@ namespace project1
             int PickCounter = 0;
             bool costEffective = false;
 
-            
+            //Empty list to be used later in select player method
             List<int> RankSelections = new List<int>();
            
         
@@ -192,15 +194,16 @@ namespace project1
             Console.WriteLine("Welcome to the NFL Draft.  Would you like to begin? (Y/N)");
             KeyCapture(out ConsoleKey start, PickCounter, ref RankSelections, PriceAccum, ref costEffective, AffordablePrice);
             
-
+            //main while loop
             while(start != ConsoleKey.N)
             {
-                
+                //Output table method, passing in arrays of data
                 OutputTable(NameArray, PositionArray, SalaryArray, SchoolArray);
 
-
+                //method that selects the player
                 Player SelectedPlayer = SelectPlayer(PlayerArray, ref RankSelections);
 
+                //checks to make sure player has not already been selected
                 if (SelectedPlayer.PickedPlayer == false)
                 {
                     if (SelectedPlayer.DraftCost + PriceAccum > PriceLimit)
@@ -218,6 +221,8 @@ namespace project1
                         PickCounter++;
                     }
                 }
+
+                //end of large if-else statement, if player has been selected, gives user a message.
                 else
                 {
                     Console.WriteLine("Sorry, you already selected that player.");
@@ -232,7 +237,7 @@ namespace project1
                 
                 
             }
-            EndTable(PlayerArray, ref costEffective);
+            EndTable(PlayerArray, ref costEffective, PriceLimit, PriceAccum);
  
         }
 
@@ -240,26 +245,28 @@ namespace project1
         //Do this for column
         static int GetRow(Player [,] PlayerArray)
         {
+            
             int row;
             Console.WriteLine("Please enter the row number you would like to draft from.\n ");
             for(int i = 0; i < PlayerArray.GetLength(0); i++)
             {
                 Console.WriteLine($"{i + 1}) {PlayerArray[i,0].PlayerPosition}");
             }
-            try
+            row = Convert.ToInt32(Console.ReadLine());
+            /*try
             {
-                return row = Convert.ToInt32(Console.ReadLine());
+                row = Convert.ToInt32(Console.ReadLine());
             }
             catch
             {
                 row = -1;
-            }
+            }*/
             while ((row < 0) || (row > 7))
             {
                 try
                 {
                     Console.WriteLine("You entered an incorrect value.  Please enter a number between 1 and 8.");
-                    return row = Convert.ToInt32(Console.ReadLine());
+                    row = Convert.ToInt32(Console.ReadLine());
 
                 }
                 catch
@@ -268,14 +275,34 @@ namespace project1
                 }
             }
 
-            return row = Convert.ToInt32(Console.ReadLine());
+            return row;
         }
 
         static int GetColumn(ref List<int>RankSelections)
         {
             int PlayerNumber;
             Console.WriteLine("Please enter the player number you would like to draft");
-            PlayerNumber = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                PlayerNumber = Convert.ToInt32(Console.ReadLine());
+            }
+            catch
+            {
+                PlayerNumber = -1;
+            }
+            while((PlayerNumber < 0) ||(PlayerNumber > 5))
+            {
+                try
+                {
+                    Console.WriteLine("You entered an incorrect value.  Please enter a number between 1 and 5.");
+                    PlayerNumber = Convert.ToInt32(Console.ReadLine());
+                }
+                catch
+                {
+                    PlayerNumber = -1;
+                }
+            }
+            
             RankSelections.Add(PlayerNumber);
             return PlayerNumber;
 
@@ -288,17 +315,20 @@ namespace project1
         {
             Console.Clear();
             Console.Write("Position".PadRight(20));
+
+            //Writes top line of table, with draft numbers
             for (var x = 0; x < name.GetLength(1); x++)
             {
                 Console.Write($"{x+1}".PadRight(20));
             }
-            Console.WriteLine("\n");
+            Console.WriteLine("\n"); //Skips new line
 
+            //large for loop that writes specific positions
             for (var i = 0; i < name.GetLength(0); i++)
             {
                 var y = 0;
                 Console.Write($"{position[i,y]}".PadRight(20));
-
+                //inner for loop writes player names
                 for (var x = 0; x < name.GetLength(1); x++)
                 {
                     
@@ -308,6 +338,8 @@ namespace project1
                 }
                 Console.WriteLine();
                 Console.Write("".PadRight(20));
+
+                //second inner for loop writes player draft costs
                 for(var x = 0; x <salary.GetLength(1); x++)
                 {
                     Console.Write("{0,-20}", salary[i, x].ToString("c").PadRight(20));
@@ -315,13 +347,15 @@ namespace project1
 
                 Console.WriteLine();
                 Console.Write("".PadRight(20));
+
+                //third for loop writes the schools
                 for(var x = 0; x < school.GetLength(1); x++)
 
                 {
                     Console.Write("{0,-20}", school[i, x].PadRight(20));
                 }
                 Console.WriteLine();
-
+                //when this for loop is done, starts writing next position, ex. all quarterback info first, then moves to running backs
             
 
 
@@ -378,7 +412,7 @@ namespace project1
             
         }
 
-        static void EndTable(Player[,] PlayerArray, ref bool costEffective)
+        static void EndTable(Player[,] PlayerArray, ref bool costEffective, double PriceLimit, double PriceAccum)
         {
             Console.WriteLine("You have drafted: ");
             for (var x = 0; x < PlayerArray.GetLength(0); x++)
@@ -387,7 +421,7 @@ namespace project1
                 {
                     if (PlayerArray[x, y].PickedPlayer == true)
                     {
-                        Console.WriteLine($"{PlayerArray[x,y].PlayerName}");
+                        Console.WriteLine($"{PlayerArray[x,y].PlayerName} for {PlayerArray[x,y].DraftCost.ToString("c")}");
                     }
                 }
             }
@@ -395,6 +429,7 @@ namespace project1
             {
                 Console.WriteLine("You have had a cost effective draft!");
             }
+            Console.WriteLine($"You have {(PriceLimit - PriceAccum).ToString("c")} left for signing bonuses.");
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
             
