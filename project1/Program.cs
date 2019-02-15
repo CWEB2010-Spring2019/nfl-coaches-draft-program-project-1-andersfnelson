@@ -198,35 +198,14 @@ namespace project1
             while(start != ConsoleKey.N)
             {
                 //Output table method, passing in arrays of data
-                OutputTable(NameArray, PositionArray, SalaryArray, SchoolArray);
+                OutputTable(NameArray, PositionArray, SalaryArray, SchoolArray,PickedPlayer);
 
                 //method that selects the player
                 Player SelectedPlayer = SelectPlayer(PlayerArray, ref RankSelections);
 
-                //checks to make sure player has not already been selected
-                if (SelectedPlayer.PickedPlayer == false)
-                {
-                    if (SelectedPlayer.DraftCost + PriceAccum > PriceLimit)
-                    {
-                        Console.WriteLine("Sorry, you don't have money in your budget for this player!");
-                    }
-                    else
-                    {
-                        
-                        PriceAccum = PriceAccum + SelectedPlayer.DraftCost;
-                        SelectedPlayer.PickedPlayer = true;
-                        Console.Clear();
-                        Console.WriteLine("You have drafted " + SelectedPlayer.PlayerName);
-                        Console.WriteLine("You have {0} left in your budget", (PriceLimit - PriceAccum).ToString("c"));
-                        PickCounter++;
-                    }
-                }
+              
 
-                //end of large if-else statement, if player has been selected, gives user a message.
-                else
-                {
-                    Console.WriteLine("Sorry, you already selected that player.");
-                }
+                CheckPlayer(SelectedPlayer, ref PriceAccum, PriceLimit, PickCounter);
 
 
 
@@ -311,7 +290,7 @@ namespace project1
         }
 
 
-        static void OutputTable(string [,] name, string[,] position, double [,] salary, string[,] school)
+        static void OutputTable(string [,] name, string[,] position, double [,] salary, string[,] school, bool [,] PickedPlayer)
         {
             Console.Clear();
             Console.Write("Position".PadRight(20));
@@ -331,10 +310,7 @@ namespace project1
                 //inner for loop writes player names
                 for (var x = 0; x < name.GetLength(1); x++)
                 {
-                    
                     Console.Write("{0,-20}", name[i, x].PadRight(20));
-                        
-      
                 }
                 Console.WriteLine();
                 Console.Write("".PadRight(20));
@@ -430,9 +406,37 @@ namespace project1
                 Console.WriteLine("You have had a cost effective draft!");
             }
             Console.WriteLine($"You have {(PriceLimit - PriceAccum).ToString("c")} left for signing bonuses.");
+            //Console.WriteLine(PriceAccum);
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
             
+        }
+
+        static void CheckPlayer(Player SelectedPlayer, ref double PriceAccum, double PriceLimit, int PickCounter)
+        {
+            if (SelectedPlayer.PickedPlayer == false)
+            {
+                if (SelectedPlayer.DraftCost + PriceAccum > PriceLimit)
+                {
+                    Console.WriteLine("Sorry, you don't have money in your budget for this player!");
+                }
+                else
+                {
+
+                    PriceAccum = PriceAccum + SelectedPlayer.DraftCost;
+                    SelectedPlayer.PickedPlayer = true;
+                    Console.Clear();
+                    Console.WriteLine("You have drafted " + SelectedPlayer.PlayerName);
+                    Console.WriteLine("You have {0} left in your budget", (PriceLimit - PriceAccum).ToString("c"));
+                    PickCounter++;
+                }
+            }
+
+            //end of large if-else statement, if player has been selected, gives user a message.
+            else
+            {
+                Console.WriteLine("Sorry, you already selected that player.");
+            }
         }
         
     }
